@@ -6,6 +6,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
+DEFAULT_FRONTEND_ORIGIN = "http://react-frontend-bieluchy-frontend.apps.cluster-qmfr5.qmfr5.sandbox265.opentlc.com"
 DEFAULT_BASE_URL = "http://lsd-llama-milvus-inline-service-collabothon.apps.cluster-qmfr5.qmfr5.sandbox265.opentlc.com"
 DEFAULT_MODEL_ID = "granite-31-8b"
 DEFAULT_VECTOR_DB_ID = "form_helper_db"
@@ -25,6 +26,7 @@ class Settings:
     kb_path: Path
     rag_chunk_size_tokens: int
     api_port: int
+    frontend_origin: str
 
 
 @lru_cache(maxsize=1)
@@ -45,4 +47,5 @@ def get_settings() -> Settings:
             os.getenv("RAG_CHUNK_SIZE_TOKENS", DEFAULT_RAG_CHUNK_SIZE)
         ),
         api_port=int(os.getenv("PORT", DEFAULT_PORT)),
+        frontend_origin=str(os.getenv("FRONTEND_ORIGIN", DEFAULT_FRONTEND_ORIGIN))
     )
