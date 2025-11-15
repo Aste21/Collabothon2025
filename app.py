@@ -85,34 +85,8 @@ def _append_to_history(
         conversation_store[conversation_id] = history[-MAX_HISTORY_MESSAGES:]
 
 
-def _build_conversation_text(
-    history: ConversationHistory,
-    user_message: Message,
-) -> str:
-    """Zamień historię + bieżącą wiadomość na jeden tekst do RAG-a.
-
-    Format prosty:
-    System: ...
-    User: ...
-    Assistant: ...
-    User: ...
-    itd.
-    """
-    parts: List[str] = []
-
-    # Stały systemowy opis (dla czytelności kontekstu)
-    parts.append(f"System: {SYSTEM_PROMPT}")
-
-    for msg in history + [user_message]:
-        if msg.role == "user":
-            prefix = "User"
-        elif msg.role == "assistant":
-            prefix = "Assistant"
-        else:
-            prefix = "System"
-        parts.append(f"{prefix}: {msg.content}")
-
-    return "\n\n".join(parts)
+# Funkcja _build_conversation_text() usunięta - nie jest już potrzebna
+# Bo historię przekazujemy bezpośrednio do answer_question()
 
 
 @app.get("/health")
@@ -146,12 +120,11 @@ def chat(request: ChatRequest) -> ChatResponse:
     # 2) Bieżąca wiadomość usera (model Message)
     user_msg = Message(role="user", content=request.message)
 
-    # 3) Zbuduj tekst konwersacji dla RAG-a
-    conversation_text = _build_conversation_text(history, user_msg)
-
-    # 4) Wywołaj RAG-owego AWS Form Assistanta
-    #    (answer_question pochodzi z aws_form_assistant.py)
-    answer_text = answer_question(conversation_text)
+    # 3) Wywołaj RAG-owego AWS Form Assistanta
+    #    Przekazujemy samą wiadomość (dla RAG query) + historię (dla LLM)
+    answer_text = answer_question(
+        current_message=request.message, conversation_history=history
+    )
 
     assistant_msg = Message(role="assistant", content=answer_text)
 

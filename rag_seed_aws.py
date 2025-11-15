@@ -3,8 +3,10 @@ from pathlib import Path
 from llama_stack_client import LlamaStackClient, RAGDocument
 
 # ==== CONFIG – dostosuj do swojego środowiska ====
-BASE_URL = "http://lsd-llama-milvus-inline-service:8321/"
-VECTOR_DB_ID = "form_helper_db"  # UŻYJ TEGO SAMEGO ID, KTÓRY ZAREJESTROWAŁEŚ W NOTEBOOKU
+BASE_URL = "http://lsd-llama-milvus-inline-service-collabothon.apps.cluster-qmfr5.qmfr5.sandbox265.opentlc.com"
+VECTOR_DB_ID = (
+    "form_helper_db"  # UŻYJ TEGO SAMEGO ID, KTÓRY ZAREJESTROWAŁEŚ W NOTEBOOKU
+)
 
 # Spróbuj użyć __file__ (gdy to jest normalny .py), a w notebooku fallback na cwd
 try:
