@@ -6,7 +6,7 @@ from llama_stack_client import LlamaStackClient, RAGDocument
 # ==== CONFIG – dostosuj do swojego środowiska ====
 BASE_URL = "http://lsd-llama-milvus-inline-service:8321/"
 VECTOR_DB_ID = "form_helper_db"          # ten sam co w rag_seed_aws.py
-LLM_ID = "llama-32-8b-instruct"          # z client.models.list()
+LLM_ID = "granite-31-8b"          # z client.models.list()
 # ================================================
 
 
