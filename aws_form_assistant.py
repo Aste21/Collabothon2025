@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import List, Dict, Any, Sequence, Tuple, Union
 from pathlib import Path
@@ -9,7 +10,32 @@ BASE_URL = "http://lsd-llama-milvus-inline-service-collabothon.apps.cluster-qmfr
 VECTOR_DB_ID = "form_helper_db"  # ten sam co w rag_seed_aws.py
 LLM_ID = "granite-31-8b"  # z client.models.list()
 LLM_TEMPERATURE = 0
+MAX_TOOL_CALLS = 3
 # ================================================
+
+RAG_FUNCTION_NAME = "retrieve_aws_context"
+RAG_TOOL_DEFINITION = {
+    "type": "function",
+    "function": {
+        "name": RAG_FUNCTION_NAME,
+        "description": (
+            "Fetch relevant excerpts from the AWS architecture knowledge base. "
+            "Call this whenever you need accurate AWS service or pricing guidance."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "question": {
+                    "type": "string",
+                    "description": (
+                        "Exact user wording or follow-up question you want to look up."
+                    ),
+                }
+            },
+            "required": ["question"],
+        },
+    },
+}
 
 
 client = LlamaStackClient(base_url=BASE_URL)
@@ -23,8 +49,8 @@ except NameError:
 AWS_KB_PATH = base_path / "aws_architecture_kb.md"
 
 
-def _build_context(user_question: str) -> str:
-    """Run RAG query and build context string for the LLM."""
+def _run_rag_query(user_question: str) -> str:
+    """Run RAG query and return concatenated context chunks."""
     rag_result = client.tool_runtime.rag_tool.query(
         content=user_question,
         vector_db_ids=[VECTOR_DB_ID],
@@ -59,80 +85,114 @@ def _normalize_message(msg: MessageLike) -> Tuple[str, str]:
     return role, content
 
 
-def _build_conversation_text(
-    conversation_history: Sequence[MessageLike], current_message: str
-) -> str:
-    """Serialize conversation history + current user message."""
-    parts: List[str] = []
-
-    for msg in conversation_history:
-        role, content = _normalize_message(msg)
-        if role == "assistant":
-            prefix = "Assistant"
-        elif role == "system":
-            prefix = "System"
-        else:
-            prefix = "User"
-        parts.append(f"{prefix}: {content}")
-
-    parts.append(f"User: {current_message}")
-    return "\n\n".join(parts)
-
-
 def answer_question(
     current_message: str, conversation_history: Sequence[MessageLike]
 ) -> str:
-    """Answer a user question about AWS using RAG + conversation history.
-
-    Args:
-        current_message: The current user message (used for RAG query)
-        conversation_history: List of previous messages (dicts with 'role' and 'content')
-
-    Returns:
-        The assistant's answer
-    """
-    # RAG query używa TYLKO aktualnej wiadomości
-    context_text = _build_context(current_message)
-    conversation_text = _build_conversation_text(
-        conversation_history or [], current_message=current_message
+    """Answer a user question about AWS using conversation history + RAG tool calls."""
+    system_prompt = (
+        "You are an AWS solutions assistant for non-technical customers.\n"
+        "When the user describes what they want to build:\n"
+        "- Clarify missing scale details before estimating cost.\n"
+        "- Propose an AWS-based architecture (components + AWS services).\n"
+        "- Provide rough monthly cost ranges for small / medium / large tiers.\n"
+        "- Explain why AWS is a good fit and how it can scale.\n"
+        "Use the retrieve_aws_context tool whenever you need authoritative AWS info.\n"
+        "If the user input is empty or unclear, ask for clarification."
     )
 
-    system_prompt = """You are an AWS solutions assistant for non-technical customers.
-The user will describe a system they want to build.
-Your job is to:
-1) Restate their requirements in simple terms.
-2) Propose an AWS-based architecture (components + AWS services).
-3) Provide a rough monthly cost estimate in clearly labeled tiers,
-   based on the scale described (small / medium / large).
-4) Explain why this approach on AWS is a good fit.
-If you lack key details (like number of users or traffic), ask a short clarification question first.
-Always answer in clear, friendly English.
+    messages: List[Dict[str, Any]] = [{"role": "system", "content": system_prompt}]
 
-"""
+    for msg in conversation_history or []:
+        role, content = _normalize_message(msg)
+        messages.append({"role": role, "content": content})
 
-    user_message = (
-        "Context from AWS knowledge base:\n"
-        f"{context_text}\n\n"
-        "Conversation so far:\n"
-        f"{conversation_text}\n\n"
-        "Please respond to the latest user request. If details are missing, ask a short "
-        "clarifying question before proposing an architecture."
-    )
+    messages.append({"role": "user", "content": current_message})
 
-    messages = [
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": user_message},
-    ]
+    for _ in range(MAX_TOOL_CALLS + 1):
+        response_message = _call_llm(messages, use_tools=True)
+        tool_calls = getattr(response_message, "tool_calls", None) or []
+
+        if tool_calls:
+            messages.append(
+                {
+                    "role": "assistant",
+                    "content": response_message.content or "",
+                    "tool_calls": [_serialize_tool_call(tc) for tc in tool_calls],
+                }
+            )
+
+            for tool_call in tool_calls:
+                tool_output = _handle_tool_call(tool_call, current_message)
+                messages.append(
+                    {
+                        "role": "tool",
+                        "tool_call_id": getattr(tool_call, "id", ""),
+                        "name": getattr(
+                            getattr(tool_call, "function", None),
+                            "name",
+                            RAG_FUNCTION_NAME,
+                        ),
+                        "content": tool_output,
+                    }
+                )
+            continue
+
+        if response_message.content:
+            return response_message.content
+
+        break
+
+    raise RuntimeError("LLM did not produce a final answer")
+
+
+def _call_llm(messages: List[Dict[str, Any]], use_tools: bool = False):
+    """Call the LLM with optional tool definitions."""
+    request_kwargs: Dict[str, Any] = {
+        "model": LLM_ID,
+        "messages": messages,
+        "temperature": LLM_TEMPERATURE,
+    }
+
+    if use_tools:
+        request_kwargs["tools"] = [RAG_TOOL_DEFINITION]
+        request_kwargs["tool_choice"] = "auto"
 
     try:
-        completion = client.chat.completions.create(
-            model=LLM_ID,
-            messages=messages,
-            temperature=LLM_TEMPERATURE,
-        )
+        completion = client.chat.completions.create(**request_kwargs)
     except Exception as exc:  # pragma: no cover - network layer
         logger.exception("LLM completion request failed")
         raise RuntimeError("LLM backend request failed") from exc
 
-    answer_text = completion.choices[0].message.content
-    return answer_text
+    return completion.choices[0].message
+
+
+def _serialize_tool_call(tool_call: Any) -> Dict[str, Any]:
+    """Convert SDK tool call object into dict expected by chat completions."""
+    function_obj = getattr(tool_call, "function", None)
+    return {
+        "id": getattr(tool_call, "id", ""),
+        "type": getattr(tool_call, "type", "function"),
+        "function": {
+            "name": getattr(function_obj, "name", RAG_FUNCTION_NAME),
+            "arguments": getattr(function_obj, "arguments", "{}"),
+        },
+    }
+
+
+def _handle_tool_call(tool_call: Any, fallback_question: str) -> str:
+    """Execute supported tool calls and return textual output."""
+    function_obj = getattr(tool_call, "function", None)
+    function_name = getattr(function_obj, "name", "")
+    arguments_raw = getattr(function_obj, "arguments", "{}") or "{}"
+
+    try:
+        arguments = json.loads(arguments_raw)
+    except json.JSONDecodeError:
+        arguments = {}
+
+    if function_name != RAG_FUNCTION_NAME:
+        logger.warning("Unsupported tool call received: %s", function_name)
+        return "Unsupported tool call."
+
+    question = arguments.get("question") or fallback_question
+    return _run_rag_query(question)
