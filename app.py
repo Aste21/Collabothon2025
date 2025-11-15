@@ -5,7 +5,9 @@ from typing import Dict, List, Literal, Optional
 
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
-from llama_stack_client import LlamaStackClient
+
+# IMPORT z modułu z RAG-iem
+from aws_form_assistant import answer_question
 
 #
 # === CONFIG ===
@@ -16,19 +18,20 @@ from llama_stack_client import LlamaStackClient
 BASE_URL = os.getenv("LLAMA_BASE_URL", "http://lsd-llama-milvus-inline-service:8321/")
 MODEL_ID = os.getenv("LLAMA_MODEL_ID", "llama-32-8b-instruct")
 
-client = LlamaStackClient(base_url=BASE_URL)
-
 app = FastAPI(
     title="LLM Chat API",
-    description="Prosty FastAPI wrapper na Llama Stack (chat.completions) z historią rozmowy.",
-    version="0.2.0",
+    description=(
+        "Prosty FastAPI wrapper na Llama Stack (RAG AWS Form Assistant) "
+        "z prostą historią rozmowy po stronie serwera."
+    ),
+    version="0.3.0",
 )
 
 # ====== KONFIG HISTORII ======
 
 SYSTEM_PROMPT = (
-    "You are a helpful assistant. Answer briefly, clearly and politely. "
-    "You can use previous turns in the conversation to stay on topic."
+    "You are an AWS solutions assistant for non-technical customers. "
+    "Use the conversation history to keep context."
 )
 
 # Ile ostatnich wiadomości trzymać (łącznie: user + assistant)
@@ -79,6 +82,36 @@ def _append_to_history(
         conversation_store[conversation_id] = history[-MAX_HISTORY_MESSAGES:]
 
 
+def _build_conversation_text(
+    history: ConversationHistory,
+    user_message: Message,
+) -> str:
+    """Zamień historię + bieżącą wiadomość na jeden tekst do RAG-a.
+
+    Format prosty:
+    System: ...
+    User: ...
+    Assistant: ...
+    User: ...
+    itd.
+    """
+    parts: List[str] = []
+
+    # Stały systemowy opis (dla czytelności kontekstu)
+    parts.append(f"System: {SYSTEM_PROMPT}")
+
+    for msg in history + [user_message]:
+        if msg.role == "user":
+            prefix = "User"
+        elif msg.role == "assistant":
+            prefix = "Assistant"
+        else:
+            prefix = "System"
+        parts.append(f"{prefix}: {msg.content}")
+
+    return "\n\n".join(parts)
+
+
 @app.get("/health")
 def health_check() -> dict:
     """Prosty endpoint zdrowotny."""
@@ -107,45 +140,24 @@ def chat(request: ChatRequest) -> ChatResponse:
 
     history = conversation_store[conversation_id]
 
-    # 2) Zbuduj listę messages dla LLM
-    messages: List[dict] = []
-
-    # Stały system prompt (persona bota)
-    messages.append({"role": "system", "content": SYSTEM_PROMPT})
-
-    # Historia konwersacji z pamięci
-    for msg in history:
-        messages.append({"role": msg.role, "content": msg.content})
-
-    # Bieżąca wiadomość usera
+    # 2) Bieżąca wiadomość usera (model Message)
     user_msg = Message(role="user", content=request.message)
-    messages.append({"role": user_msg.role, "content": user_msg.content})
 
-    # 3) Wywołaj LLM przez LlamaStack (OpenAI-compatible API)
-    completion = client.chat.completions.create(
-        model=MODEL_ID,
-        messages=messages,
-    )
+    # 3) Zbuduj tekst konwersacji dla RAG-a
+    conversation_text = _build_conversation_text(history, user_msg)
 
-    # message jest obiektem, nie dict!
-    answer_text = completion.choices[0].message.content
+    # 4) Wywołaj RAG-owego AWS Form Assistanta
+    #    (answer_question pochodzi z aws_form_assistant.py)
+    answer_text = answer_question(conversation_text)
+
     assistant_msg = Message(role="assistant", content=answer_text)
 
-    # 4) Zapisz do historii
+    # 5) Zapisz do historii
     _append_to_history(conversation_id, user_msg, assistant_msg)
 
-    # 5) Zwróć odpowiedź + conversation_id
+    # 6) Zwróć odpowiedź + conversation_id
     return ChatResponse(
         answer=answer_text,
         model_id=MODEL_ID,
         conversation_id=conversation_id,
     )
-
-
-if __name__ == "__main__":
-    import os
-    import uvicorn
-
-    port = int(os.getenv("PORT", "8080"))
-    uvicorn.run("app:app", host="0.0.0.0", port=port)
-
