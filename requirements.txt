@@ -1,0 +1,4 @@
+fastapi
+uvicorn[standard]
+pydantic
+llama_stack_client
