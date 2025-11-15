@@ -22,3 +22,4 @@ termcolor
 pandas
 prompt-toolkit
 gunicorn
+uvicorn
