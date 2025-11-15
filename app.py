@@ -3,7 +3,7 @@ import uuid
 from collections import defaultdict
 from typing import Dict, List, Literal, Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 # IMPORT z modułu z RAG-iem
@@ -122,9 +122,16 @@ def chat(request: ChatRequest) -> ChatResponse:
 
     # 3) Wywołaj RAG-owego AWS Form Assistanta
     #    Przekazujemy samą wiadomość (dla RAG query) + historię (dla LLM)
-    answer_text = answer_question(
-        current_message=request.message, conversation_history=history
-    )
+    try:
+        answer_text = answer_question(
+            current_message=request.message,
+            conversation_history=history,
+        )
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=502,
+            detail="LLM backend timed out. Please retry in a moment.",
+        ) from exc
 
     assistant_msg = Message(role="assistant", content=answer_text)
 
