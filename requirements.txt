@@ -1,5 +1,23 @@
+# --- API + web server ---
 fastapi
 uvicorn[standard]
 pydantic
-llama_stack_client
+
+# --- Llama Stack client (OpenAI-compatible, RAG itp.) ---
+llama-stack-client
+
+# --- Główne zależności llama-stack-client (wprost, żeby nie było niespodzianek) ---
+requests
+httpx
+anyio
+sniffio
+pyyaml
+tqdm
+click
+distro
+typing-extensions
 fire
+rich
+termcolor
+pandas
+prompt-toolkit
