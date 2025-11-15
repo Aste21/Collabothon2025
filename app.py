@@ -15,7 +15,10 @@ from aws_form_assistant import answer_question
 # Możesz nadpisać to zmiennymi środowiskowymi:
 #   LLAMA_BASE_URL, LLAMA_MODEL_ID
 #
-BASE_URL = os.getenv("LLAMA_BASE_URL", "http://lsd-llama-milvus-inline-service:8321/")
+BASE_URL = os.getenv(
+    "LLAMA_BASE_URL",
+    "http://lsd-llama-milvus-inline-service-collabothon.apps.cluster-qmfr5.qmfr5.sandbox265.opentlc.com",
+)
 MODEL_ID = os.getenv("LLAMA_MODEL_ID", "granite-31-8b")
 
 app = FastAPI(
@@ -169,5 +172,5 @@ if __name__ == "__main__":
     uvicorn.run(
         app,
         host="0.0.0.0",
-        port=os.getenv("PORT", "8080"),
+        port=int(os.getenv("PORT", "8080")),
     )

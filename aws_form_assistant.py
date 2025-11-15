@@ -4,10 +4,10 @@ from pathlib import Path
 from llama_stack_client import LlamaStackClient, RAGDocument
 
 # ==== CONFIG – dostosuj do swojego środowiska ====
-BASE_URL = "http://lsd-llama-milvus-inline-service:8321/"
-VECTOR_DB_ID = "form_helper_db"          # ten sam co w rag_seed_aws.py
-LLM_ID = "granite-31-8b"          # z client.models.list()
-LLM_TEMPERATURE=0
+BASE_URL = "http://lsd-llama-milvus-inline-service-collabothon.apps.cluster-qmfr5.qmfr5.sandbox265.opentlc.com"
+VECTOR_DB_ID = "form_helper_db"  # ten sam co w rag_seed_aws.py
+LLM_ID = "granite-31-8b"  # z client.models.list()
+LLM_TEMPERATURE = 0
 # ================================================
 
 
@@ -47,8 +47,7 @@ def answer_question(user_question: str) -> str:
     """Answer a user question about AWS and the deployment form."""
     context_text = _build_context(user_question)
 
-    system_prompt = (
-        """You are an AWS solutions assistant for non-technical customers.
+    system_prompt = """You are an AWS solutions assistant for non-technical customers.
         The user will describe a system they want to build.
         Your job is to:
         1) Restate their requirements in simple terms.
@@ -59,7 +58,6 @@ def answer_question(user_question: str) -> str:
         If you lack key details (like number of users or traffic), ask a short clarification question first.
         Always answer in clear, friendly English.
         """
-    )
 
     user_message = (
         f"Context:\n{context_text}\n\n"
