@@ -7,6 +7,7 @@ from llama_stack_client import LlamaStackClient, RAGDocument
 BASE_URL = "http://lsd-llama-milvus-inline-service:8321/"
 VECTOR_DB_ID = "form_helper_db"          # ten sam co w rag_seed_aws.py
 LLM_ID = "granite-31-8b"          # z client.models.list()
+LLM_TEMPERATURE=0
 # ================================================
 
 
@@ -72,7 +73,7 @@ def answer_question(user_question: str) -> str:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_message},
         ],
-        temperature=0,
+        temperature=LLM_TEMPERATURE,
     )
 
     answer_text = completion.choices[0].message.content
