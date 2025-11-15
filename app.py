@@ -140,3 +140,12 @@ def chat(request: ChatRequest) -> ChatResponse:
         model_id=MODEL_ID,
         conversation_id=conversation_id,
     )
+
+
+if __name__ == "__main__":
+    import os
+    import uvicorn
+
+    port = int(os.getenv("PORT", "8080"))
+    uvicorn.run("app:app", host="0.0.0.0", port=port)
+
