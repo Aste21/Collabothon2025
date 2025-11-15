@@ -1,15 +1,11 @@
 import json
 import logging
-from typing import List, Dict, Any, Sequence, Tuple, Union
-from pathlib import Path
+from typing import Any, Dict, List, Sequence, Tuple, Union
 
-from llama_stack_client import LlamaStackClient, RAGDocument
+from llama_stack_client import LlamaStackClient
 
-# ==== CONFIG – dostosuj do swojego środowiska ====
-BASE_URL = "http://lsd-llama-milvus-inline-service-collabothon.apps.cluster-qmfr5.qmfr5.sandbox265.opentlc.com"
-VECTOR_DB_ID = "form_helper_db"  # ten sam co w rag_seed_aws.py
-LLM_ID = "granite-31-8b"  # z client.models.list()
-LLM_TEMPERATURE = 0
+from config import get_settings
+
 MAX_TOOL_CALLS = 3
 # ================================================
 
@@ -38,22 +34,16 @@ RAG_TOOL_DEFINITION = {
 }
 
 
-client = LlamaStackClient(base_url=BASE_URL)
+settings = get_settings()
+client = LlamaStackClient(base_url=settings.base_url)
 logger = logging.getLogger(__name__)
-
-try:
-    base_path = Path(__file__).parent
-except NameError:
-    base_path = Path.cwd()
-
-AWS_KB_PATH = base_path / "aws_architecture_kb.md"
 
 
 def _run_rag_query(user_question: str) -> str:
     """Run RAG query and return concatenated context chunks."""
     rag_result = client.tool_runtime.rag_tool.query(
         content=user_question,
-        vector_db_ids=[VECTOR_DB_ID],
+        vector_db_ids=[settings.vector_db_id],
     )
 
     chunks: List[str] = []
@@ -148,9 +138,9 @@ def answer_question(
 def _call_llm(messages: List[Dict[str, Any]], use_tools: bool = False):
     """Call the LLM with optional tool definitions."""
     request_kwargs: Dict[str, Any] = {
-        "model": LLM_ID,
+        "model": settings.model_id,
         "messages": messages,
-        "temperature": LLM_TEMPERATURE,
+        "temperature": settings.llm_temperature,
     }
 
     if use_tools:
