@@ -16,7 +16,7 @@ from aws_form_assistant import answer_question
 #   LLAMA_BASE_URL, LLAMA_MODEL_ID
 #
 BASE_URL = os.getenv("LLAMA_BASE_URL", "http://lsd-llama-milvus-inline-service:8321/")
-MODEL_ID = os.getenv("LLAMA_MODEL_ID", "llama-32-8b-instruct")
+MODEL_ID = os.getenv("LLAMA_MODEL_ID", "granite-31-8b")
 
 app = FastAPI(
     title="LLM Chat API",
