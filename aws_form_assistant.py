@@ -56,7 +56,8 @@ def answer_question(user_question: str) -> str:
            based on the scale described (small / medium / large).
         4) Explain why this approach on AWS is a good fit.
         If you lack key details (like number of users or traffic), ask a short clarification question first.
-        Always answer in clear, friendly English."""
+        Always answer in clear, friendly English.
+        """
     )
 
     user_message = (
@@ -71,6 +72,7 @@ def answer_question(user_question: str) -> str:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_message},
         ],
+        temperature=0,
     )
 
     answer_text = completion.choices[0].message.content
