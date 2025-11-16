@@ -110,7 +110,7 @@ def _normalize_message(msg: MessageLike) -> Tuple[str, str]:
 
 def answer_question(
     current_message: str, conversation_history: Sequence[MessageLike]
-) -> str:
+) -> Tuple[str, Optional[Dict[str, Any]]]:
     """Answer a user question about AWS using conversation history + RAG tool calls."""
     history_len = len(conversation_history or [])
     logger.info("Answering new question; history_len=%d", history_len)
@@ -128,6 +128,13 @@ def answer_question(
         " outside scope and offer the closest allowed alternative.\n"
         "Do not disclose tool usage, function calls, or mention retrieve_aws_context "
         "in your reply.\n"
+        "Respond strictly with a minified JSON object of the form "
+        '{"answer": "...", "diagram": {"components": [...], "relations": [...]}}.\n'
+        "Include the diagram field Always when user asks about a use case Always ALways Always. Omit the diagram key entirely otherwise.\n"
+        "When diagram is present:\n"
+        "- components must be an array of component names from the allowed list.\n"
+        '- relations must be objects {"from": "<component>", "to": "<component>"} using '
+        "those names to reflect go.GraphLinksModel nodes and links.\n"
         "Before you attempt any answer about AWS, ALWAYS call the retrieve_aws_context tool, "
         "consume its output, and only then craft the final reply.\n"
         "If the user input is empty or unclear, ask for clarification."
@@ -183,8 +190,13 @@ def answer_question(
 
         if response_message.content:
             final_text = _strip_tool_call_json(response_message.content)
-            logger.info("Returning final answer (chars=%d)", len(final_text))
-            return final_text
+            answer_text, diagram_payload = _extract_answer_and_diagram(final_text)
+            logger.info(
+                "Returning final answer (chars=%d, diagram=%s)",
+                len(answer_text),
+                bool(diagram_payload),
+            )
+            return answer_text, diagram_payload
 
         break
 
@@ -203,11 +215,11 @@ def _call_llm(messages: List[Dict[str, Any]], use_tools: bool = False):
         use_tools,
     )
     try:
-        # completion = client.chat.completions.create(**request_kwargs)
         completion = client.chat.completions.create(
             model=settings.model_id,
             messages=messages,
             temperature=settings.llm_temperature,
+            response_format={"type": "json_object"},
             tool_choice="auto",
             tools=[RAG_TOOL_DEFINITION],
         )
@@ -302,6 +314,110 @@ def _strip_tool_call_json(content: str) -> str:
         end += 1
 
     return content
+
+
+def _extract_answer_and_diagram(
+    content: str,
+) -> Tuple[str, Optional[Dict[str, Any]]]:
+    """Parse assistant JSON response into answer text and optional diagram."""
+    cleaned_content = _clean_model_output(content)
+
+    payload = _parse_json_recursive(cleaned_content)
+    if payload is None:
+        json_block = _extract_json_block(cleaned_content)
+        if json_block:
+            payload = _parse_json_recursive(json_block)
+
+    if payload is None or not isinstance(payload, dict):
+        return cleaned_content, None
+
+    answer = payload.get("answer")
+    diagram = payload.get("diagram")
+
+    normalized_answer = answer if isinstance(answer, str) else cleaned_content
+    normalized_diagram: Optional[Dict[str, Any]] = None
+
+    if isinstance(diagram, dict):
+        components = diagram.get("components")
+        relations = diagram.get("relations")
+        if isinstance(components, list) and isinstance(relations, list):
+            normalized_diagram = {
+                "components": components,
+                "relations": relations,
+            }
+
+    return normalized_answer, normalized_diagram
+
+
+def _clean_model_output(content: str) -> str:
+    """Trim sentinel tokens and whitespace from model output."""
+    if not content:
+        return ""
+
+    sanitized = content.strip()
+    sentinel_idx = sanitized.find("<|eot")
+    if sentinel_idx != -1:
+        sanitized = sanitized[:sentinel_idx]
+
+    return sanitized.strip()
+
+
+def _try_parse_json(text: str) -> Optional[Any]:
+    if not text:
+        return None
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        return None
+
+
+def _extract_json_block(content: str) -> Optional[str]:
+    """Best-effort extraction of the first JSON object from arbitrary text."""
+    start = None
+    depth = 0
+    in_string = False
+    escape = False
+
+    for idx, char in enumerate(content):
+        if escape:
+            escape = False
+            continue
+
+        if char == "\\" and in_string:
+            escape = True
+            continue
+
+        if char == '"':
+            in_string = not in_string
+            continue
+
+        if in_string:
+            continue
+
+        if char == "{":
+            if depth == 0:
+                start = idx
+            depth += 1
+        elif char == "}":
+            if depth:
+                depth -= 1
+                if depth == 0 and start is not None:
+                    return content[start : idx + 1]
+
+    return None
+
+
+def _parse_json_recursive(text: str, max_depth: int = 3) -> Optional[Any]:
+    """Attempt to parse JSON, unwrapping nested JSON strings if needed."""
+    candidate = text
+    for _ in range(max_depth):
+        parsed = _try_parse_json(candidate)
+        if parsed is None:
+            return None
+        if not isinstance(parsed, str):
+            return parsed
+        candidate = parsed
+    return None
 
 
 def _handle_tool_call(tool_call: Any, fallback_question: str) -> str:
