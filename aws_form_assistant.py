@@ -196,16 +196,6 @@ def answer_question(
 
 def _call_llm(messages: List[Dict[str, Any]], use_tools: bool = False):
     """Call the LLM with optional tool definitions."""
-    request_kwargs: Dict[str, Any] = {
-        "model": settings.model_id,
-        "messages": messages,
-        "temperature": settings.llm_temperature,
-    }
-
-    if use_tools:
-        request_kwargs["tools"] = [RAG_TOOL_DEFINITION]
-        request_kwargs["tool_choice"] = "auto"
-
     logger.info(
         "Invoking LLM model=%s, messages=%d, use_tools=%s",
         settings.model_id,
@@ -213,7 +203,14 @@ def _call_llm(messages: List[Dict[str, Any]], use_tools: bool = False):
         use_tools,
     )
     try:
-        completion = client.chat.completions.create(**request_kwargs)
+        # completion = client.chat.completions.create(**request_kwargs)
+        completion = client.chat.completions.create(
+            model=settings.model_id,
+            messages=messages,
+            temperature=settings.llm_temperature,
+            tool_choice="auto",
+            tools=[RAG_TOOL_DEFINITION],
+        )
     except Exception as exc:  # pragma: no cover - network layer
         logger.exception("LLM completion request failed")
         raise RuntimeError("LLM backend request failed") from exc
