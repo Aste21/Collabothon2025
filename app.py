@@ -1,6 +1,6 @@
 import uuid
 from collections import defaultdict
-from typing import Dict, List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,9 +21,7 @@ app = FastAPI(
     version="0.3.0",
 )
 
-origins = [
-    settings.frontend_origin
-]
+origins = [settings.frontend_origin]
 
 app.add_middleware(
     CORSMiddleware,
@@ -62,6 +60,12 @@ class ChatResponse(BaseModel):
     model_id: str
     conversation_id: str = Field(
         ..., description="Conversation identifier that the client must store."
+    )
+    diagram: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description=(
+            "Optional diagram payload with AWS components and relations, when provided."
+        ),
     )
 
 
@@ -116,7 +120,7 @@ def chat(request: ChatRequest) -> ChatResponse:
     user_msg = Message(role="user", content=request.message)
 
     try:
-        answer_text = answer_question(
+        answer_text, diagram_payload = answer_question(
             current_message=request.message,
             conversation_history=history,
         )
@@ -134,6 +138,7 @@ def chat(request: ChatRequest) -> ChatResponse:
         answer=answer_text,
         model_id=settings.model_id,
         conversation_id=conversation_id,
+        diagram=diagram_payload,
     )
 
 
@@ -145,4 +150,5 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=settings.api_port,
         reload=True,
+        log_level="info",
     )
