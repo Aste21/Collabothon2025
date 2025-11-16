@@ -21,9 +21,7 @@ app = FastAPI(
     version="0.3.0",
 )
 
-origins = [
-    settings.frontend_origin
-]
+origins = [settings.frontend_origin]
 
 app.add_middleware(
     CORSMiddleware,
@@ -145,4 +143,5 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=settings.api_port,
         reload=True,
+        log_level="info",
     )
