@@ -1,1211 +1,779 @@
-# AWS MONSTER KNOWLEDGE BASE (Extended Edition)
+## 1. API Gateway
 
-## VPC Routing Internals (Section 1)
+Amazon API Gateway is a fully managed service that enables developers to create, deploy, maintain, secure, and scale APIs at any volume of requests.
 
-### Overview
+What It Does
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Serves as the entry point for HTTP/REST/WebSocket traffic.
 
-### Deep Technical Notes
+Handles routing, authentication, throttling, and protocol transformations.
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Provides managed integrations with:
 
-### Architecture Considerations
+Lambda functions
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+ECS/EKS services
 
-### Pricing Considerations
+Step Functions
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+VPC Link for private services
 
-### Best Practices
+SQS, Kinesis, S3 (indirectly via Lambda)
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Key Features
 
-## Cost Optimization Techniques (Section 2)
+HTTP API — lightweight, cheaper, ideal for serverless workloads.
 
-### Overview
+REST API — feature-rich (request/response mapping, usage plans).
 
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+WebSocket API — real-time two-way communication.
 
-### Deep Technical Notes
+Authorization:
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+IAM Authorization
 
-### Architecture Considerations
+Cognito JWT Auth
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Data durability is achieved through multi‑AZ replication and background reconciliation processes. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Custom Lambda authorizers
 
-### Pricing Considerations
+Multiple deployments/stages (dev/stage/prod).
 
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+Built-in throttling, caching, monitoring, and Swagger/OpenAPI support.
 
-### Best Practices
+Use Cases
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
+Serverless backends
 
-## S3 Security & Encryption (Section 3)
+Multi-tenant SaaS APIs
 
-### Overview
+Mobile backend services
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Real-time chat (WebSocket)
 
-### Deep Technical Notes
+Pricing (Ballpark)
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+HTTP API: ~$1.00 per 1M requests
 
-### Architecture Considerations
+REST API: ~$3.50 per 1M requests
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+WebSocket: ~$1.00 per 1M messages
 
-### Pricing Considerations
+Optional caching (per hour, depends on cache size)
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+## 2. Aurora
 
-### Best Practices
+Amazon Aurora is a distributed, cloud-optimized relational database compatible with MySQL/PostgreSQL.
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+What It Does
 
-## Kinesis Shard Scaling Strategies (Section 4)
+Provides high throughput, low-latency relational queries.
 
-### Overview
+Durable distributed storage automatically replicated to 6 copies across 3 AZs.
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Supports multi-writer, read replicas, and cross-region replication.
 
-### Deep Technical Notes
+Key Features
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+5× throughput of MySQL, 3× of PostgreSQL.
 
-### Architecture Considerations
+Storage auto-expands from 10GB → 128TB.
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Aurora Serverless v2:
 
-### Pricing Considerations
+Scales compute continuously based on load.
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Fast failover (seconds) with automated health monitoring.
 
-### Best Practices
+Highly durable log-structured storage engine.
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Use Cases
 
-## VPC Routing Internals (Section 5)
+SaaS apps
 
-### Overview
+High-traffic OLTP systems
 
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Multi-tenant DB architectures
 
-### Deep Technical Notes
+Financial platforms
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Pricing
 
-### Architecture Considerations
+Compute (Serverless v2): ~0.12 USD per ACU hour
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+Storage: ~0.10 USD / GB-month
 
-### Pricing Considerations
+IO requests billed separately
 
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+## 3. CloudFront
 
-### Best Practices
+Amazon CloudFront is AWS’s global CDN with 450+ edge locations.
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+What It Does
 
-## CloudFront Edge Cache Behavior (Section 6)
+Caches content close to users.
 
-### Overview
+Reduces latency for static/dynamic content.
 
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
+Handles TLS at the edge.
 
-### Deep Technical Notes
+Protects origins with Origin Access Control (OAC).
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Key Features
 
-### Architecture Considerations
+Streaming support (HLS/DASH).
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
+Integration with WAF, Shield, Lambda@Edge, CloudWatch.
 
-### Pricing Considerations
+Geo-restrictions, signed URLs, and signed cookies.
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Origin failover between multiple origins.
 
-### Best Practices
+Use Cases
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+Static websites
 
-## SageMaker Training/Inference Pipeline (Section 7)
+Video streaming
 
-### Overview
+DDoS/latency protection
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Global API acceleration
 
-### Deep Technical Notes
+Pricing
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+~$0.085 / GB data-out
 
-### Architecture Considerations
+Requests are cheap (fractions of cents per 10k)
 
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
+## 4. CloudTrail
 
-### Pricing Considerations
+Tracks all management and data events across AWS accounts.
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+What It Does
 
-### Best Practices
+Logs every API call: user, service, timestamp, parameters.
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+Stores logs in S3 with optional encryption.
 
-## Kinesis Shard Scaling Strategies (Section 8)
+Integrates with CloudWatch, Athena, and GuardDuty.
 
-### Overview
+Key Features
 
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Multi-region trails.
 
-### Deep Technical Notes
+Log integrity checks (immutability).
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
+Event filtering and alerts.
 
-### Architecture Considerations
+Mandatory tool for compliance.
 
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Use Cases
 
-### Pricing Considerations
+Audit and governance
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Forensics after breaches
 
-### Best Practices
+Security compliance (PCI, SOC2, HIPAA)
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+Pricing
 
-## ELB/ALB/NLB Load Balancing Algorithms (Section 9)
+Management event trail: 1 free per account
 
-### Overview
+Data events billed per request
 
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+## 5. CloudWatch
 
-### Deep Technical Notes
+Monitoring, logging, metrics, alerts, dashboards.
 
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+What It Does
 
-### Architecture Considerations
+Collects logs from Lambda/ECS/EC2.
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Provides metric dashboards (CPU, memory, custom).
 
-### Pricing Considerations
+Triggers alarms (SNS, Slack, PagerDuty).
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+Enables distributed tracing (X-Ray integration).
 
-### Best Practices
+Key Features
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Metrics: CPU/memory/disk/network.
 
-## SageMaker Training/Inference Pipeline (Section 10)
+Logs: centralized log groups.
 
-### Overview
+Alarms: threshold or anomaly detection.
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+Dashboards: custom widgets.
 
-### Deep Technical Notes
+Use Cases
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Observability
 
-### Architecture Considerations
+SRE monitoring
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Business KPIs
 
-### Pricing Considerations
+Auto-scaling triggers
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Pricing
 
-### Best Practices
+Logs: ~$0.50/GB ingested
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Metrics: ~$0.30/metric/month
 
-## Data Lake Best Practices (Section 11)
+Alarms: ~$0.10–0.20 each
 
-### Overview
+## 6. DynamoDB
 
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Fully managed, highly scalable NoSQL key-value/document database.
 
-### Deep Technical Notes
+What It Does
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Stores low-latency items at massive scale.
 
-### Architecture Considerations
+Supports 10M+ requests per second with hot-partition protection.
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Offers Streams for change-tracking.
 
-### Pricing Considerations
+Key Features
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+On-Demand or Provisioned mode.
 
-### Best Practices
+Global Tables for multi-region low-latency.
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. This service operates across multiple distributed subsystems designed for fault isolation and high availability. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+TTL for item expiration.
 
-## Disaster Recovery Strategies (RTO/RPO) (Section 12)
+PartiQL SQL-like querying.
 
-### Overview
+Use Cases
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Gaming leaderboards
 
-### Deep Technical Notes
+Ecommerce carts
 
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+IoT telemetry
 
-### Architecture Considerations
+Serverless applications
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Pricing
 
-### Pricing Considerations
+Reads: ~$0.155 per 1M
 
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+Writes: ~$0.78 per 1M
 
-### Best Practices
+Storage: ~$0.25/GB-month
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+## 7. EC2
 
-## Aurora Storage Engine Internals (Section 13)
+Elastic Compute Cloud — virtual servers with OS-level control.
 
-### Overview
+What It Does
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+Runs any Linux/Windows OS and application runtime.
 
-### Deep Technical Notes
+Uses Nitro hypervisor for high performance.
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Key Features
 
-### Architecture Considerations
+Hundreds of instance types.
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Auto Scaling Groups.
 
-### Pricing Considerations
+Spot + Reserved + On-Demand models.
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+GPU/FPGA instance families.
 
-### Best Practices
+Use Cases
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Legacy apps
 
-## S3 Eventing and Notification Flows (Section 14)
+Custom machine images
 
-### Overview
+HPC
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+Long-running compute workloads
 
-### Deep Technical Notes
+Pricing
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+t3.micro: ~$8/month
 
-### Architecture Considerations
+gp3 disk: ~$0.08 / GB-month
 
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+## 8. Elastic Container Registry (ECR)
 
-### Pricing Considerations
+Private Docker registry hosted on AWS.
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+What It Does
 
-### Best Practices
+Stores container images.
 
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Scans images for vulnerabilities.
 
-## Lambda Concurrency Model (Section 15)
+Integrates with ECS, EKS, CodeBuild, Lambda.
 
-### Overview
+Key Features
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+Encryption at rest.
 
-### Deep Technical Notes
+Replication across regions.
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Data durability is achieved through multi‑AZ replication and background reconciliation processes. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
+Lifecycle policies (clean old tags).
 
-### Architecture Considerations
+Use Cases
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Microservices
 
-### Pricing Considerations
+CI/CD pipelines
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Multi-environment deployments
 
-### Best Practices
+Pricing
 
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+~$0.10 per GB-month
 
-## Data Lake Best Practices (Section 16)
+## 9. Elastic Container Service (ECS)
 
-### Overview
+AWS-native container orchestration.
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+What It Does
 
-### Deep Technical Notes
+Runs containers on EC2 or Fargate.
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. This service operates across multiple distributed subsystems designed for fault isolation and high availability. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+Handles service discovery, autoscaling, and load balancing.
 
-### Architecture Considerations
+Key Features
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+IAM roles per container.
 
-### Pricing Considerations
+Task definitions for reproducible deployment.
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Tight integration with CloudWatch and ALB.
 
-### Best Practices
+Use Cases
 
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
+Microservices at scale
 
-## VPC Routing Internals (Section 17)
+Batch workloads
 
-### Overview
+Internal APIs
 
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+Pricing
 
-### Deep Technical Notes
+ECS control plane is FREE
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+You only pay for EC2/Fargate compute
 
-### Architecture Considerations
+## 10. Elastic Kubernetes Service (EKS)
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Managed Kubernetes control plane.
 
-### Pricing Considerations
+What It Does
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+Runs standard Kubernetes clusters fully integrated into AWS.
 
-### Best Practices
+Supports EC2 or Fargate nodes.
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Key Features
 
-## S3 Security & Encryption (Section 18)
+Automatic control-plane scaling and HA.
 
-### Overview
+IAM-to-Kubernetes RBAC integration.
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Data durability is achieved through multi‑AZ replication and background reconciliation processes. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+Add-ons for networking, metrics, ingress.
 
-### Deep Technical Notes
+Use Cases
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+Kubernetes-native microservices
 
-### Architecture Considerations
+Hybrid cloud architectures
 
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+Data engineering pipelines
 
-### Pricing Considerations
+Pricing
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+~$0.10 per hour per cluster
 
-### Best Practices
+## 11. Elastic Load Balancing
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
+Load balancing platform with three main types.
 
-## EKS Control Plane Architecture (Section 19)
+Types
 
-### Overview
+ALB – HTTP/HTTPS L7 load balancer
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+NLB – L4 ultra-low-latency load balancer
 
-### Deep Technical Notes
+GLB – for network firewalls and appliances
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Key Features
 
-### Architecture Considerations
+Path/host-based routing (ALB).
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
+Static IPs (NLB).
 
-### Pricing Considerations
+Health checks.
 
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+TLS termination.
 
-### Best Practices
+Use Cases
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
+Web applications
 
-## DynamoDB Partitioning and Hot Partition Avoidance (Section 20)
+Microservices
 
-### Overview
+Multi-AZ failover
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Pricing
 
-### Deep Technical Notes
+ALB: ~$0.022–0.03/hr
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
+NLB: ~$0.006–0.015/hr
 
-### Architecture Considerations
+## 12. EventBridge
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Event bus for event-driven architectures.
 
-### Pricing Considerations
+What It Does
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+Routes events between services without coupling.
 
-### Best Practices
+Processes SaaS events (Stripe, Auth0, etc.)
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Key Features
 
-## Aurora Storage Engine Internals (Section 21)
+Pattern-based filtering.
 
-### Overview
+Scheduled events.
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+Dead-letter queues.
 
-### Deep Technical Notes
+Use Cases
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Microservice decoupling
 
-### Architecture Considerations
+Orchestration
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Real-time event routing
 
-### Pricing Considerations
+Pricing
 
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+~$1 per 1M events
 
-### Best Practices
+## 13. IAM (Identity and Access Management)
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+The central security system for AWS access.
 
-## Data Lake Best Practices (Section 22)
+What It Does
 
-### Overview
+Defines who can access what and under what conditions.
 
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+Key Features
 
-### Deep Technical Notes
+Users, groups, roles.
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Policies (JSON) with allow/deny.
 
-### Architecture Considerations
+Permission boundaries.
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+Temporary STS tokens.
 
-### Pricing Considerations
+Use Cases
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
+Least privilege
 
-### Best Practices
+Multi-account setups
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Identity federation
 
-## Multi‑Region Active‑Active Patterns (Section 23)
+Pricing
 
-### Overview
+Free
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
+## 14. IoT Core
 
-### Deep Technical Notes
+Cloud platform for IoT device messaging and management.
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+What It Does
 
-### Architecture Considerations
+Securely connects millions of devices.
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Routes messages using MQTT, WebSockets, HTTP.
 
-### Pricing Considerations
+Key Features
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+Device registry + Digital Twin (Device Shadow).
 
-### Best Practices
+Rules Engine → integrate with DynamoDB, S3, Lambda.
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+End-to-end encryption.
 
-## Serverless Microservice Patterns (Section 24)
+Use Cases
 
-### Overview
+Smart home
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Industrial telemetry
 
-### Deep Technical Notes
+Fleet management
 
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Pricing
 
-### Architecture Considerations
+~$1 per million messages
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+## 15. Lambda
 
-### Pricing Considerations
+Serverless compute for running code on-demand.
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+What It Does
 
-### Best Practices
+Executes functions on triggers (HTTP, S3, Cron, EventBridge).
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Auto-scales instantly.
 
-## Serverless Microservice Patterns (Section 25)
+Key Features
 
-### Overview
+Pay-per-invocation + compute-time.
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Multi-language support.
 
-### Deep Technical Notes
+Concurrency controls.
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
+Layers for shared dependencies.
 
-### Architecture Considerations
+Use Cases
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Serverless APIs
 
-### Pricing Considerations
+ETL pipelines
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Event-driven processing
 
-### Best Practices
+Pricing
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+$0.20 per 1M calls
 
-## DynamoDB Partitioning and Hot Partition Avoidance (Section 26)
+~$0.000004 per GB-second
 
-### Overview
+## 16. Network Firewall
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Managed VPC-level firewall.
 
-### Deep Technical Notes
+What It Does
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Inspects traffic between subnets, VPCs, and on-prem.
 
-### Architecture Considerations
+Key Features
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Stateful deep packet inspection.
 
-### Pricing Considerations
+Rules for L3–L7.
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+Scalable throughput.
 
-### Best Practices
+Use Cases
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Enterprise compliance
 
-## IAM Policy Evaluation Logic (Section 27)
+Regulated industries
 
-### Overview
+Layered security
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+Pricing
 
-### Deep Technical Notes
+Per-firewall-hour
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Per-GB inspection
 
-### Architecture Considerations
+## 17. RDS
 
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Relational Database Service.
 
-### Pricing Considerations
+What It Does
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Managed SQL engines: MySQL, PostgreSQL, MariaDB, Oracle, SQL Server.
 
-### Best Practices
+Key Features
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Multi-AZ failover.
 
-## S3 Security & Encryption (Section 28)
+Automated backups.
 
-### Overview
+Read replicas.
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. This service operates across multiple distributed subsystems designed for fault isolation and high availability. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Use Cases
 
-### Deep Technical Notes
+Business applications
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. This service operates across multiple distributed subsystems designed for fault isolation and high availability. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+ERP/CRM
 
-### Architecture Considerations
+Financial systems
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Pricing
 
-### Pricing Considerations
+db.t3.micro: ~13 USD/month
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+~$0.10/GB storage
 
-### Best Practices
+## 18. Route 53
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+AWS’s DNS platform.
 
-## Serverless Microservice Patterns (Section 29)
+What It Does
 
-### Overview
+Routes user traffic globally with near-zero latency.
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Key Features
 
-### Deep Technical Notes
+Latency-based routing.
 
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. This service operates across multiple distributed subsystems designed for fault isolation and high availability. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+Weighted routing.
 
-### Architecture Considerations
+Geo DNS.
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Health checks.
 
-### Pricing Considerations
+Use Cases
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Failover architectures
 
-### Best Practices
+Multi-region deployments
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Pricing
 
-## Multi‑Region Active‑Active Patterns (Section 30)
+~$0.50 per hosted zone
 
-### Overview
+~$0.40–0.60 per 1M queries
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
+## 19. Secrets Manager
 
-### Deep Technical Notes
+Secure secret storage with automatic rotation.
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+What It Does
 
-### Architecture Considerations
+Stores passwords, API keys, database credentials.
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+Automatically rotates secrets via Lambda hooks.
 
-### Pricing Considerations
+Key Features
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+Fine-grained IAM control.
 
-### Best Practices
+Encryption via KMS.
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+Audit trail (CloudTrail).
 
-## Monitoring & Observability Deep Dive (Section 31)
+Use Cases
 
-### Overview
+API keys
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
+DB credentials
 
-### Deep Technical Notes
+Multi-environment CI/CD
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Pricing
 
-### Architecture Considerations
+~$0.40 per secret/month
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+~$0.05 per 10k API calls
 
-### Pricing Considerations
+## 20. S3 (Simple Storage Service)
 
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+Highly durable object storage.
 
-### Best Practices
+What It Does
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Stores objects (files, images, logs, backups, datasets).
 
-## ELB/ALB/NLB Load Balancing Algorithms (Section 32)
+Supports event triggers → Lambda/EventBridge.
 
-### Overview
+Provides lifecycle transitions to cheaper tiers.
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+Key Features
 
-### Deep Technical Notes
+11 9’s durability.
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
+Bucket policies & ACLs.
 
-### Architecture Considerations
+Versioning.
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
+Cross-region replication.
 
-### Pricing Considerations
+Use Cases
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+File uploads
 
-### Best Practices
+Log storage
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Static website hosting
 
-## Kinesis Shard Scaling Strategies (Section 33)
+Data lakes
 
-### Overview
+Pricing
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
+Standard: ~$0.023 per GB-month
 
-### Deep Technical Notes
+PUT/GET requests billed separately
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+## 21. Step Functions
 
-### Architecture Considerations
+Serverless workflow orchestrator for multi-step processes.
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
+What It Does
 
-### Pricing Considerations
+Runs distributed workflows with retries/error handling.
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
+Key Features
 
-### Best Practices
+Parallel tasks.
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Choice/Merge.
 
-## Disaster Recovery Strategies (RTO/RPO) (Section 34)
+Map for batching.
 
-### Overview
+Express vs Standard workflows.
 
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
+Use Cases
 
-### Deep Technical Notes
+Document pipelines
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+ML orchestration
 
-### Architecture Considerations
+Business workflows
 
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
+Pricing
 
-### Pricing Considerations
+Standard: ~$0.025 per 1,000 transitions
 
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
+Express: cheaper, high-volume
 
-### Best Practices
+## 22. VPC (Virtual Private Cloud)
 
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Customizable virtual network environment.
 
-## Lambda Concurrency Model (Section 35)
+What It Does
 
-### Overview
+Provides isolated IP ranges, routing, firewalling.
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
+Key Features
 
-### Deep Technical Notes
+Subnets (public/private).
 
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
+NAT gateways.
 
-### Architecture Considerations
+VPC endpoints for S3/DynamoDB.
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+Security Groups & NACLs.
 
-### Pricing Considerations
+Use Cases
 
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
+Secure backend systems
 
-### Best Practices
+Hybrid networks
 
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
+Multi-tier architectures
 
-## S3 Security & Encryption (Section 36)
+Pricing
 
-### Overview
+VPC itself free
 
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
+NAT gateway ~$32/month
 
-### Deep Technical Notes
-
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
-
-### Architecture Considerations
-
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
-
-### Pricing Considerations
-
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
-
-### Best Practices
-
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
-
-## S3 Eventing and Notification Flows (Section 37)
-
-### Overview
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
-
-### Deep Technical Notes
-
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
-
-### Architecture Considerations
-
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
-
-### Pricing Considerations
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
-
-### Best Practices
-
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
-
-## Monitoring & Observability Deep Dive (Section 38)
-
-### Overview
-
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
-
-### Deep Technical Notes
-
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
-
-### Architecture Considerations
-
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
-
-### Pricing Considerations
-
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
-
-### Best Practices
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
-
-## SageMaker Training/Inference Pipeline (Section 39)
-
-### Overview
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
-
-### Deep Technical Notes
-
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
-
-### Architecture Considerations
-
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
-
-### Pricing Considerations
-
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
-
-### Best Practices
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
-
-## DynamoDB Partitioning and Hot Partition Avoidance (Section 40)
-
-### Overview
-
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
-
-### Deep Technical Notes
-
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
-
-### Architecture Considerations
-
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
-
-### Pricing Considerations
-
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
-
-### Best Practices
-
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
-
-## CloudFront Edge Cache Behavior (Section 41)
-
-### Overview
-
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
-
-### Deep Technical Notes
-
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
-
-### Architecture Considerations
-
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
-
-### Pricing Considerations
-
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Data durability is achieved through multi‑AZ replication and background reconciliation processes. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
-
-### Best Practices
-
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
-
-## Serverless Microservice Patterns (Section 42)
-
-### Overview
-
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
-
-### Deep Technical Notes
-
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
-
-### Architecture Considerations
-
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Data durability is achieved through multi‑AZ replication and background reconciliation processes. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
-
-### Pricing Considerations
-
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
-
-### Best Practices
-
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
-
-## API Gateway Execution Pipeline (Section 43)
-
-### Overview
-
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
-
-### Deep Technical Notes
-
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
-
-### Architecture Considerations
-
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
-
-### Pricing Considerations
-
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
-
-### Best Practices
-
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
-
-## Kinesis Shard Scaling Strategies (Section 44)
-
-### Overview
-
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Data durability is achieved through multi‑AZ replication and background reconciliation processes. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
-
-### Deep Technical Notes
-
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
-
-### Architecture Considerations
-
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Data durability is achieved through multi‑AZ replication and background reconciliation processes. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
-
-### Pricing Considerations
-
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
-
-### Best Practices
-
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
-
-## CloudFront Edge Cache Behavior (Section 45)
-
-### Overview
-
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
-
-### Deep Technical Notes
-
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
-
-### Architecture Considerations
-
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
-
-### Pricing Considerations
-
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
-
-### Best Practices
-
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
-
-## Disaster Recovery Strategies (RTO/RPO) (Section 46)
-
-### Overview
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
-
-### Deep Technical Notes
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
-
-### Architecture Considerations
-
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
-
-### Pricing Considerations
-
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
-
-### Best Practices
-
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
-
-## IAM Policy Evaluation Logic (Section 47)
-
-### Overview
-
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
-
-### Deep Technical Notes
-
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
-
-### Architecture Considerations
-
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
-
-### Pricing Considerations
-
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
-
-### Best Practices
-
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
-
-## API Gateway Execution Pipeline (Section 48)
-
-### Overview
-
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
-
-### Deep Technical Notes
-
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
-
-### Architecture Considerations
-
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
-
-### Pricing Considerations
-
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
-
-### Best Practices
-
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
-
-## Multi‑Region Active‑Active Patterns (Section 49)
-
-### Overview
-
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
-
-### Deep Technical Notes
-
-Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
-
-### Architecture Considerations
-
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
-
-### Pricing Considerations
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
-
-### Best Practices
-
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
-
-## S3 Eventing and Notification Flows (Section 50)
-
-### Overview
-
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
-
-### Deep Technical Notes
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
-
-### Architecture Considerations
-
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth.
-
-### Pricing Considerations
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
-
-### Best Practices
-
-This service operates across multiple distributed subsystems designed for fault isolation and high availability. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
-
-## EC2 Nitro System Architecture (Section 51)
-
-### Overview
-
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
-
-### Deep Technical Notes
-
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
-
-### Architecture Considerations
-
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
-
-### Pricing Considerations
-
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
-
-### Best Practices
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
-
-## DynamoDB Partitioning and Hot Partition Avoidance (Section 52)
-
-### Overview
-
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Data durability is achieved through multi‑AZ replication and background reconciliation processes. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
-
-### Deep Technical Notes
-
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling.
-
-### Architecture Considerations
-
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
-
-### Pricing Considerations
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
-
-### Best Practices
-
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees.
-
-## VPC Routing Internals (Section 53)
-
-### Overview
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
-
-### Deep Technical Notes
-
-Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers.
-
-### Architecture Considerations
-
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
-
-### Pricing Considerations
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation.
-
-### Best Practices
-
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
-
-## CloudFront Edge Cache Behavior (Section 54)
-
-### Overview
-
-Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
-
-### Deep Technical Notes
-
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
-
-### Architecture Considerations
-
-Data durability is achieved through multi‑AZ replication and background reconciliation processes. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. This service operates across multiple distributed subsystems designed for fault isolation and high availability.
-
-### Pricing Considerations
-
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. This service operates across multiple distributed subsystems designed for fault isolation and high availability. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
-
-### Best Practices
-
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge.
-
-## DynamoDB Partitioning and Hot Partition Avoidance (Section 55)
-
-### Overview
-
-Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
-
-### Deep Technical Notes
-
-Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Data durability is achieved through multi‑AZ replication and background reconciliation processes.
-
-### Architecture Considerations
-
-Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload. Security boundaries are enforced through IAM, network segmentation, and service‑level policy evaluation. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
-
-### Pricing Considerations
-
-AWS leverages internal control planes to orchestrate lifecycle operations while exposing a simplified API to customers. Integrations with other AWS services often rely on asynchronous messaging patterns such as SQS, SNS, or EventBridge. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Data durability is achieved through multi‑AZ replication and background reconciliation processes. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy.
-
-### Best Practices
-
-Architectural decisions must consider failure domains, scaling triggers, and eventual consistency guarantees. Large‑scale production workloads require capacity planning aligned with expected request bursts and long‑term growth. Latency characteristics depend heavily on resource placement, AZ topology, and regional replication strategy. Operational excellence requires monitoring key metrics such as throughput, error rates, saturation, and throttling. Pricing scales primarily with data transfer, compute allocation, or storage consumption depending on the workload.
+VPC endpoints billed hourly
